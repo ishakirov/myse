@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySE</title>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 style="text-align:center">MySE</h1>
+    <form>
+      <div class="input-group">
+        <input autocomplete="off" type="text" class="typeahead form-control" placeholder="Search by author..." name="q" value="{{query}}">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">Search</button>
+        </span>
+      </div>
+    </form>
+    <hr>
+    <div class="panel panel-primary">
+      <div class="panel-heading">Result count: {{ len }}</div>
+      <div class="panel-body">
+        {% for item in result %}
+          <div>
+            <a target='_blank' href='http://stackoverflow.com/questions/{{item}}'>{{ item }}</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  {% load staticfiles %}
+  <script src="{% static "search/js/typeahead.js" %}"></script>
+  <script type="text/javascript">
+  jQuery(document).ready(function() {
+      $('.typeahead').typeahead({
+          source: function (query, process) {
+              return $.get('meta/authors?q=' + query, function (data) {
+                  return process(data);
+              });
+          }
+      });
+  })
+  </script>
+</body>
+
+</html>
